@@ -82,6 +82,7 @@ public class UserController extends ExceptionHandling {
 	@GetMapping("/emails")
 	public ResponseEntity<List<String>> getEmails() {
 		List<String> emails = userService.getEmails();
+		System.out.println("lwess");
 		return ResponseEntity.ok(emails);
 	}
 
