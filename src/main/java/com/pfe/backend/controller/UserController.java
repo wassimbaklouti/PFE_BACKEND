@@ -135,8 +135,10 @@ public class UserController extends ExceptionHandling {
 										   @RequestParam("username") String username ,
 										   @RequestParam("email") String email ,
 										   @RequestParam("role") String role ,
+										   @RequestParam("phoneNumber") long phoneNumber ,
+										   @RequestParam("city") String city ,
 										   @RequestParam(value ="profileImage", required = false ) MultipartFile profileImage ) throws UsernameExistException, EmailExistException, IOException , NotAnImageFileException {
-		User newUser = userService.addNewUser(firstName, lastName, username, email, role, 
+		User newUser = userService.addNewUser(firstName, lastName, username, email, role, phoneNumber, city,
 				profileImage) ;
 		return new  ResponseEntity<>(newUser,OK);
 	}

@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 		
 		@Override
-		public User addNewUser(String firstName, String lastName, String username, String email, String role, MultipartFile profileImage) throws NotAnImageFileException , UsernameExistException, EmailExistException, IOException {
+		public User addNewUser(String firstName, String lastName, String username, String email, String role,long phoneNumber, String city, MultipartFile profileImage) throws NotAnImageFileException , UsernameExistException, EmailExistException, IOException {
 			validateNewUsernameAndEmail( null  , username, email) ;
 			User user = new User() ;
 			String password = generatePassword() ;
@@ -175,6 +175,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setLastName(lastName);
 			user.setUsername(username);
 			user.setEmail(email);
+			user.setCity(city);
+			user.setPhoneNumber(phoneNumber);
 			user.setJoinDate(new Date());
 			user.setActive(true);
 			user.setNotLocked(true);
