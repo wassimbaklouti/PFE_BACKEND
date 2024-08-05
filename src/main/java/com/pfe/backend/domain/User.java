@@ -1,57 +1,46 @@
 package com.pfe.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
+@Document(collection = "users")
 public class User implements Serializable {
-    
-	
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false)
-	
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Long id;
-	
+    private String id;
+
     private String userId;
     private String firstName;
     private String lastName;
     private String username;
-    
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)   
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    
+
     private String email;
     private String profileImageUrl;
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
-    private Date joinDate ;
-    private String role ; //ROLE_USER{ read, edit }, ROLE_ADMIN {delete}
+    private Date joinDate;
+    private String role; //ROLE_USER{ read, edit }, ROLE_ADMIN {delete}
     private String[] authorities;
     private boolean isActive;
     private boolean isNotLocked;
     private long phoneNumber;
-
     private String city;
-    
-    
-    
 
-  
-    
-    
-   
-    public User(){}
+    public User() {}
 
-    public User(Long id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate,
-                Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked, long phoneNumber, String city) {
+    public User(String id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl,
+                Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked,
+                long phoneNumber, String city) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
@@ -67,16 +56,15 @@ public class User implements Serializable {
         this.authorities = authorities;
         this.isActive = isActive;
         this.isNotLocked = isNotLocked;
-
         this.phoneNumber = phoneNumber;
         this.city = city;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -191,7 +179,6 @@ public class User implements Serializable {
     public void setNotLocked(boolean notLocked) {
         isNotLocked = notLocked;
     }
-
 
     public long getPhoneNumber() {
         return phoneNumber;

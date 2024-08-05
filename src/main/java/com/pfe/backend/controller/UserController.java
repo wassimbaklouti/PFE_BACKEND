@@ -132,14 +132,12 @@ public class UserController extends ExceptionHandling {
 	@PostMapping("/add")
 	public ResponseEntity<User> addNewUser(@RequestParam("firstName") String firstName ,
 										   @RequestParam("lastName") String lastName ,
-										   @RequestParam("email") String username ,
-										   @RequestParam("username") String email ,
+										   @RequestParam("username") String username ,
+										   @RequestParam("email") String email ,
 										   @RequestParam("role") String role ,
-										   @RequestParam("isActive") String isActive , 
-										   @RequestParam("isNotLocked") String isNotLocked ,
 										   @RequestParam(value ="profileImage", required = false ) MultipartFile profileImage ) throws UsernameExistException, EmailExistException, IOException , NotAnImageFileException {
 		User newUser = userService.addNewUser(firstName, lastName, username, email, role, 
-				Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNotLocked), profileImage) ;
+				profileImage) ;
 		return new  ResponseEntity<>(newUser,OK);
 	}
 	

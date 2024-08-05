@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 		
 		@Override
-		public User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNotLoked, boolean isActive, MultipartFile profileImage) throws NotAnImageFileException , UsernameExistException, EmailExistException, IOException {
+		public User addNewUser(String firstName, String lastName, String username, String email, String role, MultipartFile profileImage) throws NotAnImageFileException , UsernameExistException, EmailExistException, IOException {
 			validateNewUsernameAndEmail( null  , username, email) ;
 			User user = new User() ;
 			String password = generatePassword() ;
@@ -183,6 +183,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
 			saveProfileImage(user , profileImage) ;
 			userRepository.save(user);
+			LOGGER.info("created new password : " + password );
 			emailService.sendNewPasswordEmail(firstName, password, email, username);
 			return user;
 		}
