@@ -1,26 +1,23 @@
 package com.pfe.backend.repository;
 
 import com.pfe.backend.domain.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends MongoRepository<User, String> {
 
     User findUserByUsername(String username);
 
     User findUserByEmail(String email);
 
-    @Query("SELECT u.email FROM User u")
+    @Query(value = "{}", fields = "{email : 1}")
     List<String> getEmails();
-    
-    @Query("SELECT COUNT(u) FROM User u WHERE u.isActive = :isActive")
-    long countByIsActive(@Param("isActive") boolean isActive);
-    
-    @Query("SELECT COUNT(u) FROM User u WHERE u.isNotLocked = :isNotLocked")
-    long countByIsNotLocked(@Param("isNotLocked") boolean isNotLocked);
+
+    long countByIsActive(boolean isActive);
+
+    long countByIsNotLocked(boolean isNotLocked);
 }

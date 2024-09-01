@@ -9,26 +9,25 @@ import java.util.List;
 
 public interface UserService {
 
-    User register(String firstName, String lastName, String username, String email , long phoneNumber , String city) throws UserNotFoundException, UsernameExistException, EmailExistException;
+	User register(String firstName, String lastName, String username, String email, String role, long phoneNumber, String city, String expertise) throws UserNotFoundException, UsernameExistException, EmailExistException;
 
-    List<User> getUsers();
+	List<User> getUsers();
 
-    User findUserByUsername(String username);
+	User findUserByUsername(String username);
 
+	User findUserByEmail(String email);
 
+	User addNewUser(String firstName, String lastName, String username, String email, String role, long phoneNumber, String city, MultipartFile profileImage, String expertise) throws UsernameExistException, EmailExistException, IOException, NotAnImageFileException;
 
-    User findUserByEmail(String email);
-    
-    User addNewUser (String firstName , String lastName , String username , String email ,String role, boolean isNotLoked  , boolean isActive , MultipartFile profileImage ) throws UsernameExistException, EmailExistException, IOException , NotAnImageFileException;
+	User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNotLocked, boolean isActive, MultipartFile profileImage, long phoneNumber, String city, String expertise) throws NotAnImageFileException, UsernameExistException, EmailExistException, IOException;
 
-	User updateUser ( String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNotLoked  , boolean isActive , MultipartFile profileImage,long phoneNumber,String city ) throws NotAnImageFileException ,UsernameExistException, EmailExistException, IOException ;
+	void deleteUser(String username) throws IOException;
 
-	void deleteUser (String usename ) throws IOException ;
-	 List<String> getEmails();
+	List<String> getEmails();
 
-		void resetPassword (String email ) throws EmailNotFoundException ;
-	                                                                            
-	User updateProfileImage (String username , MultipartFile profileImage) throws UsernameExistException, EmailExistException, IOException , NotAnImageFileException ;
+	void resetPassword(String email) throws EmailNotFoundException;
+
+	User updateProfileImage(String username, MultipartFile profileImage) throws UsernameExistException, EmailExistException, IOException, NotAnImageFileException;
 
 	long getTotalUsers();
 
@@ -39,7 +38,4 @@ public interface UserService {
 	long getNotLockedUsers();
 
 	long getLockedUsers();
-
-	
-    
 }
