@@ -37,11 +37,15 @@ public class User implements Serializable {
     private String city;
     private String expertise;
 
+    // New fields for rating
+    private double rating = 0.0;
+    private int ratingCount = 0;
+
     public User() {}
 
     public User(String id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl,
                 Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked,
-                long phoneNumber, String city, String expertise) {
+                long phoneNumber, String city, String expertise, double rating, int ratingCount) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
@@ -60,6 +64,8 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
         this.city = city;
         this.expertise = expertise;
+        this.rating = rating;
+        this.ratingCount = ratingCount;
     }
 
     public String getId() {
@@ -204,5 +210,22 @@ public class User implements Serializable {
 
     public void setExpertise(String expertise) {
         this.expertise = expertise;
+    }
+
+    // Getters and setters for the new fields
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
     }
 }

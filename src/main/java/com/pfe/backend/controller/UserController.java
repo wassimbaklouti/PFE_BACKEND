@@ -25,15 +25,19 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-
+import com.pfe.backend.service.StripeService;
 import static com.pfe.backend.constant.FileConstant.*;
 import static com.pfe.backend.constant.SecurityConstant.JWT_TOKEN_HEADER;
 import static com.pfe.backend.constant.UserImplConstant.EMAIL_SENT;
 import static com.pfe.backend.constant.UserImplConstant.USER_DELETED_SUCCESSFULY;
 import static org.springframework.http.HttpStatus.OK;
+import org.springframework.http.ResponseEntity;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = { "/", "/user"})
+@CrossOrigin(origins = "http://localhost:3000")
 
 public class UserController extends ExceptionHandling {
     private AuthenticationManager authenticationManager;
@@ -46,6 +50,8 @@ public class UserController extends ExceptionHandling {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
+	@Autowired
+	private StripeService stripeService;
     
     
     @GetMapping("/count")
@@ -106,7 +112,7 @@ public class UserController extends ExceptionHandling {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		// Log the authentication information
-		System.out.println("Authentication: " + authentication);
+		//System.out.println("Authentication: " + authentication);
 
 		if (authentication == null || !authentication.isAuthenticated()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -115,12 +121,12 @@ public class UserController extends ExceptionHandling {
 		String username = authentication.getName();
 
 		// Log the username retrieved from authentication
-		System.out.println("Username: " + username);
+		//System.out.println("Username: " + username);
 
 		User connectedUser = userService.findUserByUsername(username);
 
 		// Log the user object retrieved
-		System.out.println("Connected User: " + connectedUser);
+		//System.out.println("Connected User: " + connectedUser);
 
 		if (connectedUser == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -155,11 +161,14 @@ public class UserController extends ExceptionHandling {
 										   @RequestParam("isNotLocked") String isNotLocked,
 										   @RequestParam("phoneNumber") long phoneNumber,
 										   @RequestParam("city") String city,
-										   @RequestParam("expertise") String expertise,
-										   @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws NotAnImageFileException, UsernameExistException, EmailExistException, IOException {
+										   @RequestParam(value = "expertise", required = false, defaultValue = "") String expertise,
+										   @RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
+			throws NotAnImageFileException, UsernameExistException, EmailExistException, IOException {
+
 		User updateUser = userService.updateUser(currentUsername, firstName, lastName, username, email, role, Boolean.parseBoolean(isActive), Boolean.parseBoolean(isNotLocked), profileImage, phoneNumber, city, expertise);
 		return new ResponseEntity<>(updateUser, OK);
 	}
+
 
 
 	@GetMapping("/find/{username}")
@@ -216,9 +225,74 @@ public class UserController extends ExceptionHandling {
 		}
 		return byteArrayOutputStream.toByteArray() ;
 	 }
-	
-	
-	
+
+	@GetMapping("/handymen/plumber")
+	public ResponseEntity<List<User>> getHandymenWithPlumberExpertise() {
+		List<User> plumbers = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "plumber");
+		return new ResponseEntity<>(plumbers, OK);
+	}
+
+	@GetMapping("/handymen/gardner")
+	public ResponseEntity<List<User>> getHandymenWithGardnerExpertise() {
+		List<User> gardners = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "gardner");
+		return new ResponseEntity<>(gardners, OK);
+	}
+
+	@GetMapping("/handymen/electrician")
+	public ResponseEntity<List<User>> getHandymenWithElectricianExpertise() {
+		List<User> electricians = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "electrician");
+		return new ResponseEntity<>(electricians, OK);
+	}
+
+	@GetMapping("/handymen/houseKeeper")
+	public ResponseEntity<List<User>> getHandymenWithHouseKeeperExpertise() {
+		List<User> houseKeepers = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "houseKeeper");
+		return new ResponseEntity<>(houseKeepers, OK);
+	}
+
+	@GetMapping("/handymen/refrigerationTechnician")
+	public ResponseEntity<List<User>> getHandymenWithRefrigerationTechnicianExpertise() {
+		List<User> refrigerationTechnicians = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "refrigerationTechnician");
+		return new ResponseEntity<>(refrigerationTechnicians, OK);
+	}
+
+	@GetMapping("/handymen/homeApplianceTechnician")
+	public ResponseEntity<List<User>> getHandymenWithHomeApplianceTechnicianExpertise() {
+		List<User> homeApplianceTechnicians = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "homeApplianceTechnician");
+		return new ResponseEntity<>(homeApplianceTechnicians, OK);
+	}
+
+	@GetMapping("/handymen/mason")
+	public ResponseEntity<List<User>> getHandymenWithMasonExpertise() {
+		List<User> masons = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "mason");
+		return new ResponseEntity<>(masons, OK);
+	}
+
+	@GetMapping("/handymen/carpenter")
+	public ResponseEntity<List<User>> getHandymenWithCarpenterExpertise() {
+		List<User> carpenters = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "carpenter");
+		return new ResponseEntity<>(carpenters, OK);
+	}
+
+	@GetMapping("/handymen/painter")
+	public ResponseEntity<List<User>> getHandymenWithPainterExpertise() {
+		List<User> painters = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "painter");
+		return new ResponseEntity<>(painters, OK);
+	}
+
+	@GetMapping("/handymen/welder")
+	public ResponseEntity<List<User>> getHandymenWithPaiWelderExpertise() {
+		List<User> painters = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "welder");
+		return new ResponseEntity<>(painters, OK);
+	}
+
+	@PostMapping("/handymen/{expertise}")
+	public ResponseEntity<Long> HandymenCount(@PathVariable("expertise") String expertise) {
+		long handyManCount = userService.HandymenCount(expertise);
+		return ResponseEntity.ok(handyManCount);
+	}
+
+
 	private  ResponseEntity<HttpResponse> response (HttpStatus httpStatus , String message ){
 		HttpResponse body = new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase()	,message.toUpperCase() )  ;
 		return new  ResponseEntity<>( body , httpStatus ) ;
@@ -237,4 +311,34 @@ public class UserController extends ExceptionHandling {
     private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
+
+
+	@PostMapping("/api/payment/create-payment-intent")
+	public ResponseEntity<?> createPaymentIntent(@RequestBody Map<String, Object> data) {
+		try {
+			Long amount = ((Number) data.get("amount")).longValue(); // Convert to Long
+			String currency = (String) data.get("currency");
+			String clientSecret = String.valueOf(stripeService.createPaymentIntent(amount, currency));
+			System.out.println(clientSecret);
+			// Retourner le client_secret
+			Map<String, String> response = new HashMap<>();
+			response.put("clientSecret", clientSecret);
+
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Erreur lors de la création du PaymentIntent");
+		}
+	}
+
+	// Endpoint pour évaluer un utilisateur
+	@PostMapping("/rate/{username}")
+	public ResponseEntity<User> rateHandyman(@PathVariable("username") String username,
+											 @RequestParam("rating") int rating) throws UserNotFoundException {
+		if (rating < 1 || rating > 5) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		User ratedUser = userService.rateHandyman(username, rating);
+		return new ResponseEntity<>(ratedUser, HttpStatus.OK);
+	}
 }

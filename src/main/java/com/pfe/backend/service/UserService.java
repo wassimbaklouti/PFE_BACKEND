@@ -38,4 +38,11 @@ public interface UserService {
 	long getNotLockedUsers();
 
 	long getLockedUsers();
+
+	List<User> getUsersByRoleAndExpertise(String role, String expertise);
+
+	long HandymenCount(String expertise);
+
+	public User rateHandyman(String username, int rating) throws UserNotFoundException;
+
 }

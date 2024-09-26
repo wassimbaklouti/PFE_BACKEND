@@ -3,10 +3,7 @@ package com.pfe.backend.service.impl;
 import com.pfe.backend.domain.User;
 import com.pfe.backend.domain.UserPrincipal;
 import com.pfe.backend.enumeration.Role;
-import com.pfe.backend.exception.domain.EmailExistException;
-import com.pfe.backend.exception.domain.EmailNotFoundException;
-import com.pfe.backend.exception.domain.NotAnImageFileException;
-import com.pfe.backend.exception.domain.UsernameExistException;
+import com.pfe.backend.exception.domain.*;
 import com.pfe.backend.repository.UserRepository;
 import com.pfe.backend.service.EmailService;
 import com.pfe.backend.service.LoginAttemptService;
@@ -341,8 +338,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 		}
 
+		@Override
+		public List<User> getUsersByRoleAndExpertise(String role, String expertise) {
+			return userRepository.findByRoleAndExpertise(role, expertise);
+		}
 
+	@Override
+	public long HandymenCount(String expertise) {
+		return userRepository.countByRoleAndExpertise("ROLE_HANDYMAN", expertise);
+	}
 
+	@Override
+	public User rateHandyman(String username, int rating) throws UserNotFoundException {
+		User user = findUserByUsername(username);
 
+		if (user == null || !user.getRole().equals("ROLE_HANDYMAN")) {
+			throw new UserNotFoundException("Handyman not found");
+		}
+
+		// Calculer la nouvelle note moyenne
+		int currentRatingCount = user.getRatingCount();
+		double currentRating = user.getRating();
+
+		double newRating = (currentRating * currentRatingCount + rating) / (currentRatingCount + 1);
+		user.setRating(newRating);
+		user.setRatingCount(currentRatingCount + 1);
+
+		userRepository.save(user);
+		return user;
+	}
 
 }

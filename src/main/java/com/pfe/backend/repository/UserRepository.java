@@ -20,4 +20,9 @@ public interface UserRepository extends MongoRepository<User, String> {
     long countByIsActive(boolean isActive);
 
     long countByIsNotLocked(boolean isNotLocked);
+
+    List<User> findByRoleAndExpertise(String role, String expertise);
+
+    long countByRoleAndExpertise(String role, String expertise);
+
 }

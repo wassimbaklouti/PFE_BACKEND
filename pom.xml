@@ -87,8 +87,16 @@
 			<version>4.13.2</version><!--$NO-MVN-MAN-VER$-->
 			<scope>test</scope>
 		</dependency>
-
-
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>26.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version> <!-- Mettez à jour avec la dernière version disponible -->
+		</dependency>
 	</dependencies>
 
 	<build>
