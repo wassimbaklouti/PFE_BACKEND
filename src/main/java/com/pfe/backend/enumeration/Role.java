@@ -5,7 +5,7 @@ import static com.pfe.backend.constant.Authority.*;
 public enum Role {
     ROLE_USER(USER_AUTHORITIES),
     ROLE_HANDYMAN(HANDYMAN_AUTHORITIES),
-    ROLE_PROPRETYOWNER(PROPRETYOWNER_AUTHORITIES),
+    ROLE_PROPERTYOWNER(PROPRETYOWNER_AUTHORITIES),
     ROLE_ADMIN(ADMIN_AUTHORITIES);
 
     private String[] authorities;
