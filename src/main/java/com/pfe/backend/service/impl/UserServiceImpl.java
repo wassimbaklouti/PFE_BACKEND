@@ -65,6 +65,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	        return userRepository.findAll();
 	    }
 
+		public List<User> getUsersByRole(String role) {
+			return userRepository.findByRole(role);
+		}
+	@Override
+		public List<User> getUsersByAdminRole() {
+			return getUsersByRole("ROLE_ADMIN");
+		}
+	@Override
+		public List<User> getUsersByUserRole() {
+			return getUsersByRole("ROLE_USER");
+		}
+	@Override
+		public List<User> getUsersByHandymanRole() {
+			return getUsersByRole("ROLE_HANDYMAN");
+		}
+	@Override
+		public List<User> getUsersByPropertyOwnerRole() {
+			return getUsersByRole("ROLE_PROPERTYOWNER");
+		}
 
 
 

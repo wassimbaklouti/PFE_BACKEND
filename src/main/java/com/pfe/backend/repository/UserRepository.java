@@ -25,4 +25,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     long countByRoleAndExpertise(String role, String expertise);
 
+    List<User> findByRole(String role);
+
 }

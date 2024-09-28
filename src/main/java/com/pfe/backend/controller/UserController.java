@@ -183,6 +183,30 @@ public class UserController extends ExceptionHandling {
 		List <User> users = userService.getUsers();
 		return new  ResponseEntity<>(users, OK);
 	}
+
+	@GetMapping("/list/admin")
+	public ResponseEntity<List<User>> getUsersByAdminRole() {
+		List<User> users = userService.getUsersByAdminRole();
+		return ResponseEntity.ok(users);
+	}
+
+	@GetMapping("/list/user")
+	public ResponseEntity<List<User>> getUsersByUserRole() {
+		List<User> users = userService.getUsersByUserRole();
+		return ResponseEntity.ok(users);
+	}
+
+	@GetMapping("/list/handyman")
+	public ResponseEntity<List<User>> getUsersByHandymanRole() {
+		List<User> users = userService.getUsersByHandymanRole();
+		return ResponseEntity.ok(users);
+	}
+
+	@GetMapping("/list/propertyowner")
+	public ResponseEntity<List<User>> getUsersByPropertyOwnerRole() {
+		List<User> users = userService.getUsersByPropertyOwnerRole();
+		return ResponseEntity.ok(users);
+	}
 	
 	@GetMapping("/resetPassword/{email}")
 	public  ResponseEntity<HttpResponse> resetPassword (@PathVariable("email") String email) throws EmailNotFoundException {

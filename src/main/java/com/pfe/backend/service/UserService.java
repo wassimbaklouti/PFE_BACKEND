@@ -44,5 +44,9 @@ public interface UserService {
 	long HandymenCount(String expertise);
 
 	public User rateHandyman(String username, int rating) throws UserNotFoundException;
+	public List<User> getUsersByAdminRole();
+	List<User> getUsersByUserRole();
+	List<User> getUsersByHandymanRole();
+	List<User> getUsersByPropertyOwnerRole();
 
 }
