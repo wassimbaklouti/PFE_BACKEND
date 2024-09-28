@@ -148,6 +148,21 @@ public class PostServiceImpl {
         return commentRepository.findByPostId(postId);
     }
 
+    public Optional<Comment> updateComment(String commentId, Comment updatedComment) {
+        return commentRepository.findById(commentId).map(comment -> {
+            comment.setContent(updatedComment.getContent());
+            comment.setDate(updatedComment.getDate());
+            return commentRepository.save(comment);
+        });
+    }
+
+    public boolean deleteComment(String commentId) {
+        if (commentRepository.existsById(commentId)) {
+            commentRepository.deleteById(commentId);
+            return true;
+        }
+        return false;
+    }
     public Like addLike(String postId, String username) {
         Like like = new Like(postId, username);
         return likeRepository.save(like);

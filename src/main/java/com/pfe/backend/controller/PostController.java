@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import static com.pfe.backend.constant.FileConstant.*;
 
@@ -128,6 +129,25 @@ public class PostController {
         return ResponseEntity.ok(comments);
     }
 
+    @PutMapping("/comments/update/{id}")
+    public ResponseEntity<Comment> updateComment(@PathVariable("id") String commentId, @RequestBody Comment updatedComment) {
+        Optional<Comment> updated = postService.updateComment(commentId, updatedComment);
+        if (updated.isPresent()) {
+            return ResponseEntity.ok(updated.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/comments/delete/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") String commentId) {
+        boolean deleted = postService.deleteComment(commentId);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @PostMapping("/like")
     public ResponseEntity<Like> addLike(
             @RequestParam String postId,
