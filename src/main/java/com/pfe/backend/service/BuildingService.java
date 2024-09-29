@@ -1,6 +1,7 @@
 package com.pfe.backend.service;
 
 import com.pfe.backend.domain.Building;
+import com.pfe.backend.domain.Reservation;
 
 import java.util.List;
 
@@ -29,4 +30,6 @@ public interface BuildingService {
     List<Building> getBuildingsByOwnerId(String ownerId);
 
     List<Building> getBuildingsByOwnerUsername(String username);
+    Building addReservation(String buildingId, Reservation reservation);
+    List<Reservation> getReservations(String buildingId);
 }

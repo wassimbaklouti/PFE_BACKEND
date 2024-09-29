@@ -1,7 +1,7 @@
 package com.pfe.backend.controller;
 
-
 import com.pfe.backend.domain.Building;
+import com.pfe.backend.domain.Reservation;
 import com.pfe.backend.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,8 @@ public class BuildingController {
 
     @Autowired
     private BuildingService buildingService;
+
+    // Existing endpoints
 
     @PostMapping("/create")
     public ResponseEntity<Building> createBuilding(@RequestBody Building building) {
@@ -41,7 +43,6 @@ public class BuildingController {
         buildingService.deleteBuilding(id);
         return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("/address")
     public ResponseEntity<List<Building>> getBuildingsByAddress(@RequestParam String address) {
@@ -78,5 +79,19 @@ public class BuildingController {
         return ResponseEntity.ok(buildingService.getBuildingsByOwnerUsername(username));
     }
 
+    // New endpoints for reservation handling
 
+    // Add a reservation to a specific building
+    @PostMapping("/{buildingId}/reservation")
+    public ResponseEntity<Building> addReservation(@PathVariable String buildingId, @RequestBody Reservation reservation) {
+        Building updatedBuilding = buildingService.addReservation(buildingId, reservation);
+        return ResponseEntity.ok(updatedBuilding);
+    }
+
+    // Get all reservations for a specific building
+    @GetMapping("/{buildingId}/reservations")
+    public ResponseEntity<List<Reservation>> getReservations(@PathVariable String buildingId) {
+        List<Reservation> reservations = buildingService.getReservations(buildingId);
+        return ResponseEntity.ok(reservations);
+    }
 }

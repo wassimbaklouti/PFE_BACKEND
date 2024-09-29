@@ -1,12 +1,14 @@
 package com.pfe.backend.service.impl;
 
-
 import com.pfe.backend.domain.Building;
+import com.pfe.backend.domain.Reservation;
 import com.pfe.backend.repository.BuildingRepository;
 import com.pfe.backend.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,4 +89,38 @@ public class BuildingServiceImpl implements BuildingService {
         return buildingRepository.findByOwnerUsername(username);
     }
 
+    // New methods for handling reservations
+
+    @Override
+    public Building addReservation(String buildingId, Reservation reservation) {
+        Building building = getBuildingById(buildingId);
+
+        // Check if the new reservation conflicts with existing reservations
+        for (Reservation existingReservation : building.getReservations()) {
+            if (isDateConflict(existingReservation.getEntryDate(), existingReservation.getExitDate(), reservation.getEntryDate(), reservation.getExitDate())) {
+                throw new RuntimeException("Reservation conflicts with an existing reservation.");
+            }
+        }
+
+        // If no conflict, add the reservation
+        List<Reservation> reservations = building.getReservations();
+        if (reservations == null) {
+            reservations = new ArrayList<>();
+        }
+        reservations.add(reservation);
+        building.setReservations(reservations);
+
+        return buildingRepository.save(building);
+    }
+
+    @Override
+    public List<Reservation> getReservations(String buildingId) {
+        Building building = getBuildingById(buildingId);
+        return building.getReservations();
+    }
+
+    // Helper method to check if two date ranges conflict
+    private boolean isDateConflict(Date start1, Date end1, Date start2, Date end2) {
+        return !(start1.after(end2) || end1.before(start2));
+    }
 }
