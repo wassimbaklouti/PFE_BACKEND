@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -48,5 +49,6 @@ public interface UserService {
 	List<User> getUsersByUserRole();
 	List<User> getUsersByHandymanRole();
 	List<User> getUsersByPropertyOwnerRole();
+	Optional<User> updateCardDetails(String username, String cardnumber, String cardexpire);
 
 }

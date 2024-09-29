@@ -34,6 +34,7 @@ import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = { "/", "/user"})
@@ -364,5 +365,16 @@ public class UserController extends ExceptionHandling {
 
 		User ratedUser = userService.rateHandyman(username, rating);
 		return new ResponseEntity<>(ratedUser, HttpStatus.OK);
+	}
+	@PutMapping("/update-card")
+	public ResponseEntity<User> updateCardDetails(
+			@RequestParam String username,
+			@RequestParam String cardnumber,
+			@RequestParam String cardexpire) {
+
+		Optional<User> updatedUser = userService.updateCardDetails(username, cardnumber, cardexpire);
+
+		return updatedUser.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

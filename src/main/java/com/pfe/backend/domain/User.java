@@ -37,6 +37,9 @@ public class User implements Serializable {
     private String city;
     private String expertise;
 
+    private String cardnumber;
+    private String cardexpire;
+
     // New fields for rating
     private double rating = 0.0;
     private int ratingCount = 0;
@@ -227,5 +230,21 @@ public class User implements Serializable {
 
     public void setRatingCount(int ratingCount) {
         this.ratingCount = ratingCount;
+    }
+
+    public String getCardnumber() {
+        return cardnumber;
+    }
+
+    public void setCardnumber(String cardnumber) {
+        this.cardnumber = cardnumber;
+    }
+
+    public String getCardexpire() {
+        return cardexpire;
+    }
+
+    public void setCardexpire(String cardexpire) {
+        this.cardexpire = cardexpire;
     }
 }

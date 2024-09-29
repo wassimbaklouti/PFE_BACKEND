@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.pfe.backend.constant.FileConstant.*;
 import static com.pfe.backend.constant.UserImplConstant.*;
@@ -385,6 +386,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 		userRepository.save(user);
 		return user;
+	}
+@Override
+	public Optional<User> updateCardDetails(String username, String cardnumber, String cardexpire) {
+		Optional<User> userOptional = userRepository.findByUsername(username);
+
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			user.setCardnumber(cardnumber);
+			user.setCardexpire(cardexpire);
+			userRepository.save(user);
+		}
+
+		return userOptional;
 	}
 
 }
