@@ -343,7 +343,7 @@ public class UserController extends ExceptionHandling {
 		try {
 			Long amount = ((Number) data.get("amount")).longValue(); // Convert to Long
 			String currency = (String) data.get("currency");
-			String clientSecret = String.valueOf(stripeService.createPaymentIntent(amount, currency));
+			String clientSecret = String.valueOf(stripeService.	createPaymentIntent(amount, currency));
 			System.out.println(clientSecret);
 			// Retourner le client_secret
 			Map<String, String> response = new HashMap<>();

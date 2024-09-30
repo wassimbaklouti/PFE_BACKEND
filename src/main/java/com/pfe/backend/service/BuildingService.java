@@ -32,4 +32,5 @@ public interface BuildingService {
     List<Building> getBuildingsByOwnerUsername(String username);
     Building addReservation(String buildingId, Reservation reservation);
     List<Reservation> getReservations(String buildingId);
+    void checkReservationConflict(Building building, Reservation newReservation);
 }

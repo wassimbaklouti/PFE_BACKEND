@@ -4,6 +4,7 @@ import com.pfe.backend.domain.Building;
 import com.pfe.backend.domain.Reservation;
 import com.pfe.backend.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,5 +94,18 @@ public class BuildingController {
     public ResponseEntity<List<Reservation>> getReservations(@PathVariable String buildingId) {
         List<Reservation> reservations = buildingService.getReservations(buildingId);
         return ResponseEntity.ok(reservations);
+    }
+    @PostMapping("/{buildingId}/check-reservation-conflict")
+    public ResponseEntity<String> checkReservationConflict(@PathVariable String buildingId, @RequestBody Reservation reservation) {
+        try {
+            Building building = buildingService.getBuildingById(buildingId);  // Fetch building
+            buildingService.checkReservationConflict(building, reservation);  // Check conflict
+
+            // No conflict found
+            return ResponseEntity.ok("No conflict found. You can proceed with the reservation.");
+        } catch (RuntimeException e) {
+            // Conflict found, return error message
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 }

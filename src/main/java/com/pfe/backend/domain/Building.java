@@ -4,6 +4,7 @@ package com.pfe.backend.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "buildings")
@@ -19,7 +20,7 @@ public class Building {
     private double area;
 
     private User owner;
-    private List<Reservation> reservations;
+    private List<Reservation> reservations= new ArrayList<>();
 
     public Building(String id, String type, String address, int rooms, double price, double area, User owner) {
         this.id = id;

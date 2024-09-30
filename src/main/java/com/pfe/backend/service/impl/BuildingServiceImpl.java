@@ -112,6 +112,15 @@ public class BuildingServiceImpl implements BuildingService {
 
         return buildingRepository.save(building);
     }
+@Override
+    public void checkReservationConflict(Building building, Reservation newReservation) {
+        for (Reservation existingReservation : building.getReservations()) {
+            if (isDateConflict(existingReservation.getEntryDate(), existingReservation.getExitDate(),
+                    newReservation.getEntryDate(), newReservation.getExitDate())) {
+                throw new RuntimeException("Reservation conflicts with an existing reservation.");
+            }
+        }
+    }
 
     @Override
     public List<Reservation> getReservations(String buildingId) {
