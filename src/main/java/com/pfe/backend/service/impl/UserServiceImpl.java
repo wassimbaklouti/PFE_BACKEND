@@ -401,4 +401,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userOptional;
 	}
 
+	@Override
+	public List<User> searchHandymenByUsername(String username) {
+		return userRepository.findByUsernameContainingAndRole(username, "ROLE_HANDYMAN");
+	}
+
 }

@@ -29,4 +29,10 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     List<User> findByRole(String role);
 
+    List<User> findByUsernameContainingAndRole(String username, String role);
+
+    // Recherche par username (partie de la chaîne)
+    @Query("{ 'username': { $regex: ?0, $options: 'i' } }") // 'i' pour ignorer la casse
+    List<User> findByUsernameContaining(String username);
+
 }

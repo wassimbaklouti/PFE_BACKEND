@@ -377,4 +377,17 @@ public class UserController extends ExceptionHandling {
 		return updatedUser.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+
+	@GetMapping("/handymen/search")
+	public ResponseEntity<List<User>> searchHandymen(@RequestParam("username") String username) {
+		List<User> handymen = userService.searchHandymenByUsername(username);
+		return ResponseEntity.ok(handymen);
+	}
+
+	@GetMapping("/handymen/{username}")
+	public ResponseEntity<User> getHandymanByUsername(@PathVariable String username) {
+		User user = userService.findUserByUsername(username);
+		return ResponseEntity.ok(user);
+	}
+
 }
