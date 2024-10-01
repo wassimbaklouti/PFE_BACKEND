@@ -2,18 +2,22 @@ package com.pfe.backend.service;
 
 import com.pfe.backend.domain.Building;
 import com.pfe.backend.domain.Reservation;
+import com.pfe.backend.domain.User;
+import com.pfe.backend.exception.domain.NotAnImageFileException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface BuildingService {
 
-    Building createBuilding(Building building);
+    Building createBuilding(String type, String address, int rooms, double price, double area, String city, MultipartFile image, String ownerUsername) throws NotAnImageFileException,IOException;
 
     Building getBuildingById(String id);
 
     List<Building> getAllBuildings();
 
-    Building updateBuilding(String id, Building buildingDetails);
+    Building updateBuilding(String id, String type, String address, int rooms,double price, double area, String city, MultipartFile image, String ownerUsername) throws IOException, NotAnImageFileException;
 
     void deleteBuilding(String id);
 

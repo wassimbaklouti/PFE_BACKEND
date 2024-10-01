@@ -24,8 +24,7 @@ public class Building {
     private User owner;
     private List<Reservation> reservations= new ArrayList<>();
 
-    public Building(String id, String type, String address, int rooms, double price, double area, User owner, String image_url, String city) {
-        this.id = id;
+    public Building(String type, String address, int rooms, double price, double area, User owner, String image_url, String city) {
         this.type = type;
         this.address = address;
         this.rooms = rooms;

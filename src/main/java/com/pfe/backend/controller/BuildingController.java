@@ -2,16 +2,24 @@ package com.pfe.backend.controller;
 
 import com.pfe.backend.domain.Building;
 import com.pfe.backend.domain.Reservation;
+import com.pfe.backend.domain.User;
 import com.pfe.backend.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
+import static com.pfe.backend.constant.FileConstant.*;
+
 @RestController
-@RequestMapping("/api/buildings")
+@RequestMapping({"/api/buildings", "/building"})
 public class BuildingController {
 
     @Autowired
@@ -19,9 +27,36 @@ public class BuildingController {
 
     // Existing endpoints
 
-    @PostMapping("/create")
-    public ResponseEntity<Building> createBuilding(@RequestBody Building building) {
-        return ResponseEntity.ok(buildingService.createBuilding(building));
+    @PostMapping(value ="/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Building> createBuilding(
+            @RequestParam ("type") String type,
+            @RequestParam ("address") String address,
+            @RequestParam ("rooms") int rooms,
+            @RequestParam ("price") double price,
+            @RequestParam ("area") double area,
+            @RequestParam ("city") String city,
+            @RequestParam ("ownerUsername") String ownerUsername,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
+    ) {
+        System.out.println("Type: " + type);
+        System.out.println("Address: " + address);
+        System.out.println("Rooms: " + rooms);
+        System.out.println("Price: " + price);
+        System.out.println("Area: " + area);
+        System.out.println("City: " + city);
+        System.out.println("Owner Username: " + ownerUsername);
+        System.out.println("Image file: " + (imageFile != null ? imageFile.getOriginalFilename() : "No image file"));
+        try{
+            Building newBuilding = buildingService.createBuilding(type,address,rooms,price,area,city,imageFile,ownerUsername);
+            return ResponseEntity.ok(newBuilding);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+    }
+    @GetMapping(path = "/image/{username}/{fileName}" , produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getProfileImage(@PathVariable ("username") String username ,@PathVariable ("fileName") String fileName) throws IOException {
+        return Files.readAllBytes(Paths.get(BUILDING_FOLDER + username +FORWARD_SLASH +fileName )) ;
     }
 
     @GetMapping("/{id}")
@@ -34,9 +69,21 @@ public class BuildingController {
         return ResponseEntity.ok(buildingService.getAllBuildings());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Building> updateBuilding(@PathVariable String id, @RequestBody Building buildingDetails) {
-        return ResponseEntity.ok(buildingService.updateBuilding(id, buildingDetails));
+    @PutMapping(value="/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Building> updateBuilding(@PathVariable String id,@RequestParam ("type") String type,
+                                                   @RequestParam ("address") String address,
+                                                   @RequestParam ("rooms") int rooms,
+                                                   @RequestParam ("price") double price,
+                                                   @RequestParam ("area") double area,
+                                                   @RequestParam ("city") String city,
+                                                   @RequestParam ("ownerUsername") String ownerUsername,
+                                                   @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
+        try{
+            return ResponseEntity.ok(buildingService.updateBuilding(id, type,address,rooms,price,area,city,imageFile,ownerUsername));
+
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @DeleteMapping("/{id}")
