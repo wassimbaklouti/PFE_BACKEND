@@ -18,11 +18,13 @@ public class Building {
     private int rooms;
     private double price;
     private double area;
+    private String image_url;
+    private String city;
 
     private User owner;
     private List<Reservation> reservations= new ArrayList<>();
 
-    public Building(String id, String type, String address, int rooms, double price, double area, User owner) {
+    public Building(String id, String type, String address, int rooms, double price, double area, User owner, String image_url, String city) {
         this.id = id;
         this.type = type;
         this.address = address;
@@ -30,6 +32,9 @@ public class Building {
         this.price = price;
         this.area = area;
         this.owner = owner;
+        this.image_url = image_url;
+        this.city = city;
+
     }
 
     public String getId() {
@@ -94,5 +99,21 @@ public class Building {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

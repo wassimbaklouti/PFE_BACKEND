@@ -4,6 +4,7 @@ import com.pfe.backend.domain.Comment;
 import com.pfe.backend.domain.Like;
 import com.pfe.backend.domain.Post;
 import com.pfe.backend.domain.User;
+import com.pfe.backend.exception.domain.NotAnImageFileException;
 import com.pfe.backend.repository.CommentRepository;
 import com.pfe.backend.repository.LikeRepository;
 import com.pfe.backend.repository.PostRepository;
@@ -23,11 +24,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static com.pfe.backend.constant.FileConstant.*;
+import static org.springframework.http.MediaType.*;
 
 @Service
 @Transactional
@@ -48,7 +51,7 @@ public class PostServiceImpl {
     private LikeRepository likeRepository;
 
     // Créer un nouveau post avec une image
-    public Post createPost(String username, String title, String content, MultipartFile image) throws IOException {
+    public Post createPost(String username, String title, String content, MultipartFile image) throws IOException, NotAnImageFileException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new RuntimeException("Utilisateur non trouvé");
@@ -60,10 +63,9 @@ public class PostServiceImpl {
         Post savedPost = postRepository.save(newPost);
 
         // Handle image saving
-        String imageUrl = savePostImage(savedPost.getId(), image);
-        savedPost.setImage_url(imageUrl);
+        savePostImage(savedPost, image);
 
-        return postRepository.save(savedPost);
+        return savedPost;
     }
 
     // Récupérer tous les posts d'un utilisateur par son username
@@ -77,30 +79,30 @@ public class PostServiceImpl {
     }
 
     // Method to handle saving the post image
-    private String savePostImage(String postId, MultipartFile image) throws IOException {
-        if (image == null || image.isEmpty()) {
-            return null; // No image uploaded
+    private void savePostImage(Post post, MultipartFile profileImage) throws IOException  , NotAnImageFileException {
+        if (profileImage != null) {
+            if ( ! Arrays.asList(IMAGE_JPEG_VALUE , IMAGE_PNG_VALUE , IMAGE_GIF_VALUE).contains(profileImage.getContentType())) {
+                throw new NotAnImageFileException (profileImage.getOriginalFilename()+ "is not an image file . Please upload an image ");
+            }
+            Path userFolder = Paths.get(POST_FOLDER + post.getUsername()).toAbsolutePath().normalize();
+            if ( !Files.exists(userFolder)){
+                Files.createDirectories(userFolder);
+                LOGGER.info(DIRECTORY_CREATED + userFolder);
+            }
+            Files.deleteIfExists(Paths.get(POST_FOLDER + post.getId() + DOT + JPG_EXTENSION ));
+            Files.copy(profileImage.getInputStream(),userFolder.resolve(post.getId()+ DOT + JPG_EXTENSION) ,REPLACE_EXISTING );
+            post.setImage_url(setProfileImage(post.getUsername(), post.getId()));
+            postRepository.save(post) ;
+            LOGGER.info(FILE_SAVED_IN_FILE_SYSTEM + profileImage.getOriginalFilename());
         }
-
-        String imageFolder = POST_FOLDER + postId; // Define where the post image should be saved
-        Path postFolderPath = Paths.get(imageFolder).toAbsolutePath().normalize();
-
-        if (!Files.exists(postFolderPath)) {
-            Files.createDirectories(postFolderPath);
-            LOGGER.info("Created directory: " + postFolderPath);
-        }
-
-        String fileName = postId + DOT + JPG_EXTENSION; // Define the image filename (using post ID)
-        Path imagePath = postFolderPath.resolve(fileName);
-        Files.copy(image.getInputStream(), imagePath, REPLACE_EXISTING); // Save the image
-
-        // Return the URL for accessing the image
-        return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(POST_IMAGE_PATH + postId + FORWARD_SLASH + fileName)
-                .toUriString();
     }
 
-    public Post updatePost(String postId, String username, String title, String content, MultipartFile image) throws IOException {
+    private String setProfileImage(String username, String id) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(POST_IMAGE_PATH + username + FORWARD_SLASH
+                + id +DOT + JPG_EXTENSION).toUriString();
+    }
+
+    public Post updatePost(String postId, String username, String title, String content, MultipartFile image) throws IOException , NotAnImageFileException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new RuntimeException("Utilisateur non trouvé");
@@ -119,8 +121,8 @@ public class PostServiceImpl {
 
         // Handle image updating if a new image is provided
         if (image != null && !image.isEmpty()) {
-            String imageUrl = savePostImage(existingPost.getId(), image); // Save new image
-            existingPost.setImage_url(imageUrl);
+            savePostImage(existingPost, image); // Save new image
+
         }
 
         // Save the updated post

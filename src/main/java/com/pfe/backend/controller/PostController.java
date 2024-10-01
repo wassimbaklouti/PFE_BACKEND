@@ -64,22 +64,9 @@ public class PostController {
         List<Post> posts = postService.getAllPosts();
         return ResponseEntity.ok(posts);
     }
-    @GetMapping(path = "/image/{postId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getPostImage(@PathVariable("postId") String postId) {
-        System.out.println(postId);
-        try {
-            // Construct the file path
-            Path imagePath = Paths.get(POST_FOLDER + postId + ".jpg"); // Assuming JPG extension
-
-            if (Files.exists(imagePath)) {
-                byte[] imageBytes = Files.readAllBytes(imagePath);
-                return ResponseEntity.ok(imageBytes);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    @GetMapping(path = "/image/{username}/{fileName}" , produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getProfileImage(@PathVariable ("username") String username ,@PathVariable ("fileName") String fileName) throws IOException {
+        return Files.readAllBytes(Paths.get(POST_FOLDER + username +FORWARD_SLASH +fileName )) ;
     }
 
     @PutMapping(value = "/update/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
