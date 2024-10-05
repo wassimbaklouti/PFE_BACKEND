@@ -1,5 +1,6 @@
 package com.pfe.backend.service.impl;
 
+import com.pfe.backend.domain.DateTravail;
 import com.pfe.backend.domain.User;
 import com.pfe.backend.domain.UserPrincipal;
 import com.pfe.backend.enumeration.Role;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -156,7 +158,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
 		@Override
-		public User register(String firstName, String lastName, String username, String email, String role, long phoneNumber , String city, String expertise) throws UsernameExistException, EmailExistException {
+		public User register(String firstName, String lastName, String username, String email, String role, long phoneNumber , String city, String expertise, DateTravail datetravail) throws UsernameExistException, EmailExistException {
 			validateNewUsernameAndEmail(StringUtils.EMPTY, username , email);
 			User user = new User() ;
 			user.setUserId(generateUserId());
@@ -171,6 +173,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			user.setActive(true);
 			user.setNotLocked(true);
 			user.setRole(role);
+			user.setDatetravail(datetravail);
 			user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
 			user.setAuthorities(ROLE_USER.getAuthorities());
 			String password = generatePassword() ;
@@ -405,5 +408,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public List<User> searchHandymenByUsername(String username) {
 		return userRepository.findByUsernameContainingAndRole(username, "ROLE_HANDYMAN");
 	}
+
+	@Override
+	public DateTravail getDateTravailById(String id) throws UserNotFoundException {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+
+		return user.getDatetravail(); // Retourne l'objet DateTravail contenant dateDeb et dateFin
+	}
+
 
 }

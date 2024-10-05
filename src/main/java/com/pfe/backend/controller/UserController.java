@@ -1,5 +1,6 @@
 package com.pfe.backend.controller;
 
+import com.pfe.backend.domain.DateTravail;
 import com.pfe.backend.domain.UserPrincipal;
 import com.pfe.backend.domain.User;
 import com.pfe.backend.domain.HttpResponse;
@@ -24,7 +25,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.time.LocalTime;
+import java.util.*;
+
 import com.pfe.backend.service.StripeService;
 import static com.pfe.backend.constant.FileConstant.*;
 import static com.pfe.backend.constant.SecurityConstant.JWT_TOKEN_HEADER;
@@ -32,9 +35,6 @@ import static com.pfe.backend.constant.UserImplConstant.EMAIL_SENT;
 import static com.pfe.backend.constant.UserImplConstant.USER_DELETED_SUCCESSFULY;
 import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = { "/", "/user"})
@@ -104,7 +104,7 @@ public class UserController extends ExceptionHandling {
 
 	@PostMapping("/register")
 	public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException {
-		User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getRole(), user.getPhoneNumber(), user.getCity(), user.getExpertise());
+		User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getRole(), user.getPhoneNumber(), user.getCity(), user.getExpertise(), user.getDatetravail());
 		return new ResponseEntity<>(newUser, OK);
 	}
 
@@ -306,8 +306,14 @@ public class UserController extends ExceptionHandling {
 	}
 
 	@GetMapping("/handymen/welder")
-	public ResponseEntity<List<User>> getHandymenWithPaiWelderExpertise() {
+	public ResponseEntity<List<User>> getHandymenWithWelderExpertise() {
 		List<User> painters = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "welder");
+		return new ResponseEntity<>(painters, OK);
+	}
+
+	@GetMapping("/handymen/sosDriver")
+	public ResponseEntity<List<User>> getHandymenWithSosDriverExpertise() {
+		List<User> painters = userService.getUsersByRoleAndExpertise("ROLE_HANDYMAN", "sosDriver");
 		return new ResponseEntity<>(painters, OK);
 	}
 
@@ -389,5 +395,17 @@ public class UserController extends ExceptionHandling {
 		User user = userService.findUserByUsername(username);
 		return ResponseEntity.ok(user);
 	}
+
+	// Endpoint pour récupérer la date de travail par ID utilisateur
+	@GetMapping("/{id}/datetravail")
+	public ResponseEntity<DateTravail> getDateTravailById(@PathVariable String id) {
+		try {
+			DateTravail dateTravail = userService.getDateTravailById(id);
+			return new ResponseEntity<>(dateTravail, HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 
 }

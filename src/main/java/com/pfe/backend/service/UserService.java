@@ -1,16 +1,18 @@
 package com.pfe.backend.service;
 
+import com.pfe.backend.domain.DateTravail;
 import com.pfe.backend.domain.User;
 import com.pfe.backend.exception.domain.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
 
-	User register(String firstName, String lastName, String username, String email, String role, long phoneNumber, String city, String expertise) throws UserNotFoundException, UsernameExistException, EmailExistException;
+	User register(String firstName, String lastName, String username, String email, String role, long phoneNumber, String city, String expertise, DateTravail datetravail) throws UserNotFoundException, UsernameExistException, EmailExistException;
 
 	List<User> getUsers();
 
@@ -57,4 +59,6 @@ public interface UserService {
 	Optional<User> updateCardDetails(String username, String cardnumber, String cardexpire);
 
 	List<User> searchHandymenByUsername(String username);
+
+	DateTravail getDateTravailById(String id) throws UserNotFoundException;
 }

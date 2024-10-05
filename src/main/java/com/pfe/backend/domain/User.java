@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Document(collection = "users")
@@ -29,6 +30,9 @@ public class User implements Serializable {
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
     private Date joinDate;
+
+    private DateTravail datetravail;
+
     private String role; //ROLE_USER{ read, edit }, ROLE_ADMIN {delete}
     private String[] authorities;
     private boolean isActive;
@@ -48,7 +52,7 @@ public class User implements Serializable {
 
     public User(String id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl,
                 Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked,
-                long phoneNumber, String city, String expertise, double rating, int ratingCount) {
+                long phoneNumber, String city, String expertise, double rating, int ratingCount, DateTravail datetravail) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
@@ -69,6 +73,15 @@ public class User implements Serializable {
         this.expertise = expertise;
         this.rating = rating;
         this.ratingCount = ratingCount;
+        this.datetravail = datetravail;
+    }
+
+    public DateTravail getDatetravail() {
+        return datetravail;
+    }
+
+    public void setDatetravail(DateTravail datetravail) {
+        this.datetravail = datetravail;
     }
 
     public String getId() {
