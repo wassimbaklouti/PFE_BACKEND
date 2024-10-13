@@ -1,1 +1,7 @@
-ejmeaa li yakraw sebt sbeeh bellehi semhouna lahdha hhhhh
+compt admin :
+  username : amine
+  mdp : OFCVUNKUWS
+
+compte mongoDB :
+  email : authentification.mdp@gmail.com
+  mdp : AminePFE888
