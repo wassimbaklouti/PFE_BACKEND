@@ -3,8 +3,8 @@ package com.pfe.backend.constant;
 public class EmailConstant {
 
 	 public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL = "smtps";
-	 public static final String USERNAME = "abbeschrif575@gmail.com";
-	 public static final String PASSWORD = "zhmz cvfc uini mkdb";
+	 public static final String USERNAME = "ayedi.amine6969@gmail.com";
+	 public static final String PASSWORD = "xkbq wqha cigr tloy";
 	 public static final String FROM_EMAIL = "support@getarrays.com";
 	 public static final String CC_EMAIL ="";
 	 public static final String EMAIL_SUBJECT = "New Password--PFE";
