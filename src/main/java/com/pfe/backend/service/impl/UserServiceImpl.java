@@ -47,7 +47,7 @@ import static org.springframework.http.MediaType.*;
 @Transactional
 @Qualifier("userDetailsService")
 public class UserServiceImpl implements UserService, UserDetailsService {
-
+	@Autowired
 	private UserRepository userRepository ;
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 	private BCryptPasswordEncoder passwordEncoder ;

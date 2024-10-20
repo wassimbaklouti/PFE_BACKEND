@@ -42,6 +42,7 @@ import org.springframework.http.ResponseEntity;
 
 public class UserController extends ExceptionHandling {
     private AuthenticationManager authenticationManager;
+	@Autowired
     private UserService userService;
     private JWTTokenProvider jwtTokenProvider;
 
