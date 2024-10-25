@@ -38,7 +38,7 @@ import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping(path = { "/", "/user"})
-@CrossOrigin(origins = "http://localhost:3000")
+
 
 public class UserController extends ExceptionHandling {
     private AuthenticationManager authenticationManager;

@@ -24,7 +24,7 @@ public class BackendApplication {
 		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
 
 		corsConfiguration.setAllowCredentials(true);
-		corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://18.209.167.231"));
+		corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://18.209.167.231","http://192.168.33.11","http://192.168.49.2:30002"));
 		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
 				"Accept","Jwt-Token", "Authorization", "Origin, Accept", "X-Requested-With",
 				"Access-Control-Request-Method", "Access-Control-Request-Headers"));

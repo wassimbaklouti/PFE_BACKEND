@@ -22,7 +22,7 @@ import static com.pfe.backend.constant.FileConstant.*;
 
 @RestController
 @RequestMapping({"/api/posts","/post"})
-@CrossOrigin(origins = "http://localhost:3000")
+
 public class PostController {
 
     @Autowired
